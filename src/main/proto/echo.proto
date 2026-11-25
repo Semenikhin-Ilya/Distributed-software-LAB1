@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+// Пакет для сгенерированных Java-классов
+option java_package = "echo.rpc";
+option java_multiple_files = true;
+
+// Запрос от клиента
+message EchoRequest {
+  string message = 1;
+  int64 sequence_number = 2; // Порядковый номер (требование 3.5)
+}
+
+// Ответ от сервера
+message EchoResponse {
+  string message = 1;          // Текст с префиксом ECHO
+  int64 sequence_number = 2;   // Возвращаем номер обратно
+  int64 server_timestamp_ms = 3; // Структурированная метка времени (требование 3.4)
+}
+
+// Сервис
+service EchoService {
+  // Двунаправленный поток: клиент шлет поток, сервер отвечает потоком (требование 3.2)
+  rpc StreamEcho(stream EchoRequest) returns (stream EchoResponse);
+}
